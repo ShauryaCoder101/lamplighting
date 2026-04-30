@@ -19,8 +19,11 @@ app.use(cors());
 app.use(express.json());
 
 // ─── SERVE STATIC ASSETS (Diya images/SVGs) ─
-// Mounted at /assets so it doesn't conflict with /display route
-app.use("/assets", express.static(path.join(__dirname, "..", "..", "dulex-paint-main", "dulex-paint-main")));
+// Try both relative paths (for Railway root dir and local dev)
+const assetsPath = path.join(__dirname, "..", "..", "dulex-paint-main", "dulex-paint-main");
+const altAssetsPath = path.join(__dirname, "..", "dulex-paint-main", "dulex-paint-main");
+const fs = require("fs");
+app.use("/assets", express.static(fs.existsSync(assetsPath) ? assetsPath : altAssetsPath));
 
 // ─── API ROUTES ──────────────────────────────
 app.use("/api", clientRoutes);
