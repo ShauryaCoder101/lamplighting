@@ -18,12 +18,8 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// ─── SERVE STATIC ASSETS (Diya images/SVGs) ─
-// Try both relative paths (for Railway root dir and local dev)
-const assetsPath = path.join(__dirname, "..", "..", "dulex-paint-main", "dulex-paint-main");
-const altAssetsPath = path.join(__dirname, "..", "dulex-paint-main", "dulex-paint-main");
-const fs = require("fs");
-app.use("/assets", express.static(fs.existsSync(assetsPath) ? assetsPath : altAssetsPath));
+// ─── SERVE STATIC ASSETS (Diya video, logo, etc.) ─
+app.use("/assets", express.static(path.join(__dirname, "public", "assets")));
 
 // ─── API ROUTES ──────────────────────────────
 app.use("/api", clientRoutes);
