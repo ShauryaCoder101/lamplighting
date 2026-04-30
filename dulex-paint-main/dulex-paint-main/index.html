@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mandala Background</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="importmap">
+    {
+        "imports": {
+            "@firecms/neat": "https://cdn.jsdelivr.net/npm/@firecms/neat@latest/+esm"
+        }
+    }
+    </script>
+</head>
+<body>
+    <div id="app-container">
+        <div class="logo-container">
+            <img src="final-logo.png" alt="Logo" class="center-logo" />
+        </div>
+
+        <!-- Grid of 300 Diyas -->
+        <div id="diya-grid-container" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none; z-index: 15;"></div>
+        
+        <script>
+            window.addEventListener('DOMContentLoaded', () => {
+                const container = document.getElementById('diya-grid-container');
+                const cols = 22; 
+                const rows = 18; 
+                let placed = 0;
+
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < cols; c++) {
+                        // Adjust the hole to be 8 columns wide and 12 rows tall (symmetrical 300 items)
+                        const inHole = (r >= 3 && r <= 14) && (c >= 7 && c <= 14);
+                        
+                        if (inHole) {
+                            continue; 
+                        }
+
+                        const xPct = 2.5 + (c / (cols - 1)) * 95;
+                        const yPct = 3.5 + (r / (rows - 1)) * 93;
+
+                        placed++;
+                        const img = document.createElement('img');
+                        img.src = 'diya.svg';
+                        img.alt = 'Diya';
+                        img.style.position = 'absolute';
+                        img.style.left = `${xPct}%`;
+                        img.style.top = `${yPct}%`;
+                        img.style.width = '3.2%';
+                        img.style.maxWidth = '25px';
+                        img.style.minWidth = '12px';
+                        img.style.transform = 'translate(-50%, -50%)';
+                        img.style.pointerEvents = 'none';
+                        img.style.filter = 'drop-shadow(0 3px 6px rgba(255, 100, 0, 0.4))';
+                        container.appendChild(img);
+
+                        const nameSpan = document.createElement('span');
+                        nameSpan.innerText = `Guest ${placed}`;
+                        nameSpan.style.position = 'absolute';
+                        nameSpan.style.left = `${xPct}%`;
+                        nameSpan.style.top = `calc(${yPct}% + 13px)`;
+                        nameSpan.style.transform = 'translate(-50%, 0)';
+                        nameSpan.style.color = 'rgba(255, 255, 255, 0.85)';
+                        nameSpan.style.fontSize = '6px';
+                        nameSpan.style.fontWeight = '500';
+                        nameSpan.style.fontFamily = "'Outfit', 'Inter', sans-serif";
+                        nameSpan.style.textShadow = '0 1px 3px rgba(0,0,0,0.9)';
+                        nameSpan.style.pointerEvents = 'none';
+                        nameSpan.style.whiteSpace = 'nowrap';
+                        container.appendChild(nameSpan);
+                    }
+                }
+                
+                console.log(`Placed exactly ${placed} diyas symmetrically.`);
+            });
+        </script>
+    </div>
+</body>
+</html>

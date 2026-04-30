@@ -1,0 +1,29 @@
+<svg width="100" height="140" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="85%" r="60%" fx="50%" fy="90%">
+      <stop offset="0%" stop-color="#fff8d6" />
+      <stop offset="15%" stop-color="#ffcc00" />
+      <stop offset="50%" stop-color="#ff9900" />
+      <stop offset="90%" stop-color="#ff6600" />
+      <stop offset="100%" stop-color="#cc5200" />
+    </radialGradient>
+    <filter id="blurLight" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3.5" />
+    </filter>
+  </defs>
+  
+  <!-- Main body - wider at top, same at bottom -->
+  <path d="M 20,10 C -5,40 5,100 30,130 L 70,130 C 95,100 105,40 80,10 Z" fill="url(#glow)" opacity="0.95" />
+
+  <!-- Top rim (wider) and bottom rim (same) -->
+  <ellipse cx="50" cy="10" rx="30" ry="3" fill="#b35a1f" stroke="#6b2f0a" stroke-width="1" />
+  <ellipse cx="50" cy="130" rx="20" ry="3" fill="none" stroke="#6b2f0a" stroke-width="1.5" />
+  
+  <!-- Cross wires at bottom -->
+  <line x1="30" y1="130" x2="70" y2="130" stroke="#6b2f0a" stroke-width="1" />
+  <line x1="50" y1="127" x2="50" y2="133" stroke="#6b2f0a" stroke-width="1" />
+  
+  <!-- The flame -->
+  <circle cx="50" cy="125" r="6" fill="#ffffff" filter="url(#blurLight)" />
+  <circle cx="50" cy="125" r="3" fill="#ffffff" />
+</svg>

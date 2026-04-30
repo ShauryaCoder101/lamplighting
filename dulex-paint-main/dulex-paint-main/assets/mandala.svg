@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <!-- Inner petals -->
+    <g id="petal-inner">
+      <path d="M 100 80 Q 105 65 100 50 Q 95 65 100 80" fill="none" stroke="#d98c16" stroke-width="1.5"/>
+    </g>
+    <!-- Middle petals -->
+    <g id="petal-mid">
+      <path d="M 100 60 Q 112 40 100 20 Q 88 40 100 60" fill="none" stroke="#d98c16" stroke-width="1.5"/>
+      <circle cx="100" cy="15" r="2" fill="#d98c16" />
+      <line x1="100" y1="55" x2="100" y2="25" stroke="#d98c16" stroke-width="1" stroke-dasharray="2 2" />
+    </g>
+    <!-- Outer petals -->
+    <g id="petal-outer">
+      <path d="M 100 40 Q 115 20 100 0 Q 85 20 100 40" fill="none" stroke="#d98c16" stroke-width="1.5"/>
+      <circle cx="100" cy="5" r="1.5" fill="#d98c16" />
+    </g>
+    
+    <g id="layer-inner">
+      <use href="#petal-inner" transform="rotate(0 100 100)" />
+      <use href="#petal-inner" transform="rotate(30 100 100)" />
+      <use href="#petal-inner" transform="rotate(60 100 100)" />
+      <use href="#petal-inner" transform="rotate(90 100 100)" />
+      <use href="#petal-inner" transform="rotate(120 100 100)" />
+      <use href="#petal-inner" transform="rotate(150 100 100)" />
+      <use href="#petal-inner" transform="rotate(180 100 100)" />
+      <use href="#petal-inner" transform="rotate(210 100 100)" />
+      <use href="#petal-inner" transform="rotate(240 100 100)" />
+      <use href="#petal-inner" transform="rotate(270 100 100)" />
+      <use href="#petal-inner" transform="rotate(300 100 100)" />
+      <use href="#petal-inner" transform="rotate(330 100 100)" />
+    </g>
+
+    <g id="layer-mid">
+      <use href="#petal-mid" transform="rotate(15 100 100)" />
+      <use href="#petal-mid" transform="rotate(45 100 100)" />
+      <use href="#petal-mid" transform="rotate(75 100 100)" />
+      <use href="#petal-mid" transform="rotate(105 100 100)" />
+      <use href="#petal-mid" transform="rotate(135 100 100)" />
+      <use href="#petal-mid" transform="rotate(165 100 100)" />
+      <use href="#petal-mid" transform="rotate(195 100 100)" />
+      <use href="#petal-mid" transform="rotate(225 100 100)" />
+      <use href="#petal-mid" transform="rotate(255 100 100)" />
+      <use href="#petal-mid" transform="rotate(285 100 100)" />
+      <use href="#petal-mid" transform="rotate(315 100 100)" />
+      <use href="#petal-mid" transform="rotate(345 100 100)" />
+    </g>
+
+    <g id="layer-outer">
+      <use href="#petal-outer" transform="rotate(0 100 100)" />
+      <use href="#petal-outer" transform="rotate(30 100 100)" />
+      <use href="#petal-outer" transform="rotate(60 100 100)" />
+      <use href="#petal-outer" transform="rotate(90 100 100)" />
+      <use href="#petal-outer" transform="rotate(120 100 100)" />
+      <use href="#petal-outer" transform="rotate(150 100 100)" />
+      <use href="#petal-outer" transform="rotate(180 100 100)" />
+      <use href="#petal-outer" transform="rotate(210 100 100)" />
+      <use href="#petal-outer" transform="rotate(240 100 100)" />
+      <use href="#petal-outer" transform="rotate(270 100 100)" />
+      <use href="#petal-outer" transform="rotate(300 100 100)" />
+      <use href="#petal-outer" transform="rotate(330 100 100)" />
+    </g>
+  </defs>
+
+  <!-- Circles -->
+  <g stroke="#d98c16" fill="none" stroke-width="1.5">
+    <!-- Center -->
+    <circle cx="100" cy="100" r="5" fill="#d98c16" />
+    <circle cx="100" cy="100" r="10" stroke-dasharray="2 2" />
+    <circle cx="100" cy="100" r="20" />
+    <circle cx="100" cy="100" r="40" stroke-width="2" />
+    <circle cx="100" cy="100" r="45" stroke-dasharray="3 3" />
+    <circle cx="100" cy="100" r="60" />
+    <circle cx="100" cy="100" r="80" stroke-width="2" />
+    <circle cx="100" cy="100" r="85" stroke-dasharray="2 4" stroke-width="2"/>
+    <circle cx="100" cy="100" r="95" stroke-width="0.5" />
+  </g>
+  
+  <use href="#layer-inner" />
+  <use href="#layer-mid" />
+  <use href="#layer-outer" />
+</svg>

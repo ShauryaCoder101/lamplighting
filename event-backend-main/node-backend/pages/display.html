@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diya Display</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #0d0d18;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        #app-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #000000;
+        }
+
+        /* Hide NEAT watermark */
+        a[href*="firecms"], a[href*="neat"],
+        a[style*="fixed"], a[style*="absolute"] {
+            display: none !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        /* Logo */
+        .logo-container {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .center-logo {
+            width: 20vw;
+            max-width: 600px;
+            min-width: 200px;
+            height: auto;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+        }
+
+        /* Diya grid */
+        #diya-grid-container {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        /* Individual diya wrapper */
+        .diya-cell {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            text-align: center;
+        }
+
+        .diya-cell video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .diya-cell .name-label {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 5px;
+            font-weight: 500;
+            font-family: 'Outfit', 'Inter', sans-serif;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+            white-space: normal;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            line-height: 1.3;
+            margin-top: 1px;
+            max-width: 100%;
+        }
+
+        /* Waiting overlay */
+        #waiting-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            transition: opacity 0.8s ease;
+        }
+
+        #waiting-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .waiting-text {
+            color: rgba(255, 255, 255, 0.6);
+            font-family: 'Outfit', sans-serif;
+            font-size: 20px;
+            font-weight: 300;
+        }
+
+        .waiting-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(255, 140, 50, 0.3)); }
+            50% { filter: drop-shadow(0 0 25px rgba(255, 140, 50, 0.6)); }
+        }
+
+        /* Name reveal animation */
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+            60% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+            100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* Cells start hidden */
+        .diya-cell {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .diya-cell.reveal {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        /* Hidden source video */
+        #source-video {
+            display: none;
+        }
+    </style>
+    <script type="importmap">
+    {
+        "imports": {
+            "@firecms/neat": "https://cdn.jsdelivr.net/npm/@firecms/neat@latest/+esm"
+        }
+    }
+    </script>
+</head>
+<body>
+    <div id="app-container">
+        <div class="logo-container">
+            <img src="/assets/final-logo.png" alt="Logo" class="center-logo" />
+        </div>
+
+        <!-- Diya grid -->
+        <div id="diya-grid-container"></div>
+
+        <!-- Waiting overlay (shown until admin transfers) -->
+        <div id="waiting-overlay">
+            <div class="waiting-icon">🪔</div>
+            <div class="waiting-text">Waiting for names...</div>
+        </div>
+    </div>
+
+    <!-- Single hidden source video — decoded once, painted to all canvases -->
+    <video id="source-video" src="/assets/diya-video.webm" loop muted playsinline preload="auto"></video>
+
+    <script>
+        const API = window.location.origin;
+        const COLS = 30;  // more columns for ultrawide (4368px wide)
+        const ROWS = 20;  // 30×20=600, minus 96 hole = 504 slots (fits 500)
+        const DIYA_SIZE_PCT = 3; // width as % of container
+        const CANVAS_W = 80;    // match video width
+        const CANVAS_H = 45;   // match video height (16:9 aspect)
+
+        let canvases = [];
+        let revealedCanvases = []; // only paint canvases that are visible
+        let sourceVideo = document.getElementById('source-video');
+        const REVEAL_DURATION = 30000; // 30 seconds to fill entire screen
+
+        // ─── BUILD DIYA GRID (with video canvases) ────
+        function buildGrid(names) {
+            const container = document.getElementById('diya-grid-container');
+            container.innerHTML = '';
+            canvases = [];
+            revealedCanvases = [];
+
+            const cells = []; // store cells for staggered reveal
+            let placed = 0;
+
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    // Stop once all names are placed
+                    if (placed >= names.length) break;
+
+                    // Center hole for logo — narrower on ultrawide
+                    // Cols 11-18 (8 cols), Rows 3-14 (12 rows)
+                    const inHole = (r >= 3 && r <= 14) && (c >= 11 && c <= 18);
+                    if (inHole) continue;
+
+                    const xPct = 1 + (c / (COLS - 1)) * 98;
+                    const yPct = 2 + (r / (ROWS - 1)) * 96;
+
+                    // Diya wrapper — starts hidden (no 'reveal' class)
+                    const cell = document.createElement('div');
+                    cell.className = 'diya-cell';
+                    cell.style.left = `${xPct}%`;
+                    cell.style.top = `${yPct}%`;
+                    cell.style.width = `${DIYA_SIZE_PCT}%`;
+                    cell.style.maxWidth = '55px';
+                    cell.style.minWidth = '20px';
+
+                    // Canvas for this diya (mirrors the source video)
+                    const canvas = document.createElement('canvas');
+                    canvas.width = CANVAS_W;
+                    canvas.height = CANVAS_H;
+                    canvas.style.width = '100%';
+                    canvas.style.height = 'auto';
+                    canvas.style.display = 'block';
+                    cell.appendChild(canvas);
+                    canvases.push(canvas);
+
+                    // Name label below
+                    const nameSpan = document.createElement('div');
+                    nameSpan.className = 'name-label';
+                    nameSpan.innerText = names[placed];
+                    cell.appendChild(nameSpan);
+
+                    container.appendChild(cell);
+                    cells.push({ cell, canvas });
+                    placed++;
+                }
+                if (placed >= names.length) break;
+            }
+
+            console.log(`Created ${placed} diyas — revealing over ${REVEAL_DURATION/1000}s`);
+
+            // Start the video + render loop
+            sourceVideo.play().then(() => {
+                renderLoop();
+            }).catch(err => {
+                console.error('Video play failed:', err);
+                document.addEventListener('click', () => {
+                    sourceVideo.play().then(renderLoop);
+                }, { once: true });
+            });
+
+            // ─── STAGGERED REVEAL over 30 seconds ────
+            // Shuffle cells for a random fill pattern (more natural)
+            const shuffled = [...cells];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+
+            const intervalMs = REVEAL_DURATION / shuffled.length;
+            let idx = 0;
+
+            const revealInterval = setInterval(() => {
+                if (idx >= shuffled.length) {
+                    clearInterval(revealInterval);
+                    return;
+                }
+                const { cell, canvas } = shuffled[idx];
+                cell.classList.add('reveal');
+                revealedCanvases.push(canvas);
+                idx++;
+            }, intervalMs);
+        }
+
+        // ─── RENDER LOOP: paint source video frame to revealed canvases ──
+        function renderLoop() {
+            if (sourceVideo.paused || sourceVideo.ended) return;
+
+            // Only paint canvases that have been revealed
+            for (const canvas of revealedCanvases) {
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(sourceVideo, 0, 0, canvas.width, canvas.height);
+            }
+
+            requestAnimationFrame(renderLoop);
+        }
+
+        // ─── POLL FOR TRANSFERRED NAMES ──────────
+        let hasLoaded = false;
+
+        async function checkForNames() {
+            try {
+                const res = await fetch(`${API}/api/admin/transferred`);
+                const data = await res.json();
+
+                if (data.names.length > 0) {
+                    if (!hasLoaded) {
+                        hasLoaded = true;
+                        document.getElementById('waiting-overlay').classList.add('hidden');
+                        buildGrid(data.names);
+                    }
+                }
+            } catch (err) {
+                console.error('Poll error:', err);
+            }
+        }
+
+        // Poll every 3 seconds until names arrive
+        checkForNames();
+        setInterval(checkForNames, 3000);
+    </script>
+
+    <!-- Gradient background -->
+    <script type="module" src="/assets/gradient.js"></script>
+</body>
+</html>

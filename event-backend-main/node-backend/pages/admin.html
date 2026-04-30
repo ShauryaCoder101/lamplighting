@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel — Dulux Event</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Outfit', sans-serif;
+            background: #0d0d18;
+            color: #fff;
+        }
+
+        /* ─── HEADER ─── */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 32px;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .header h1 span {
+            color: rgba(255, 255, 255, 0.4);
+            font-weight: 300;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* ─── STATS ─── */
+        .stats-bar {
+            display: flex;
+            gap: 16px;
+            padding: 20px 32px;
+        }
+
+        .stat-card {
+            flex: 1;
+            padding: 20px 24px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .stat-value.orange { color: #ff8c32; }
+        .stat-value.green { color: #4caf50; }
+        .stat-value.blue { color: #42a5f5; }
+
+        /* ─── BUTTONS ─── */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover { transform: translateY(-1px); }
+        .btn:active { transform: translateY(0); }
+
+        .btn-transfer {
+            background: linear-gradient(135deg, #ff8c32, #ff5722);
+            color: #fff;
+            font-size: 16px;
+            padding: 14px 32px;
+        }
+
+        .btn-transfer:hover {
+            box-shadow: 0 8px 30px rgba(255, 87, 34, 0.4);
+        }
+
+        .btn-danger {
+            background: rgba(255, 82, 82, 0.15);
+            color: #ff5252;
+            border: 1px solid rgba(255, 82, 82, 0.2);
+        }
+
+        .btn-danger:hover {
+            background: rgba(255, 82, 82, 0.25);
+        }
+
+        .btn-small {
+            padding: 6px 14px;
+            font-size: 12px;
+            border-radius: 8px;
+        }
+
+        .btn-delete {
+            background: rgba(255, 82, 82, 0.1);
+            color: #ff5252;
+            border: 1px solid rgba(255, 82, 82, 0.15);
+        }
+
+        .btn-delete:hover {
+            background: rgba(255, 82, 82, 0.2);
+        }
+
+        /* ─── UPLOAD SECTION ─── */
+        .upload-section {
+            padding: 0 32px 20px;
+        }
+
+        .upload-box {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .upload-box:hover {
+            border-color: rgba(66, 165, 245, 0.4);
+            background: rgba(66, 165, 245, 0.04);
+        }
+
+        .upload-box label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            flex-shrink: 0;
+        }
+
+        .upload-box input[type="file"] {
+            display: none;
+        }
+
+        .btn-upload-pick {
+            background: rgba(66, 165, 245, 0.12);
+            color: #42a5f5;
+            border: 1px solid rgba(66, 165, 245, 0.25);
+        }
+
+        .btn-upload-pick:hover {
+            background: rgba(66, 165, 245, 0.2);
+        }
+
+        .btn-upload-go {
+            background: linear-gradient(135deg, #42a5f5, #1e88e5);
+            color: #fff;
+        }
+
+        .btn-upload-go:hover {
+            box-shadow: 0 6px 20px rgba(66, 165, 245, 0.3);
+        }
+
+        .btn-upload-go:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .upload-filename {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* ─── TRANSFER SECTION ─── */
+        .transfer-section {
+            padding: 20px 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .transfer-status {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .transfer-status.active {
+            color: #4caf50;
+        }
+
+        /* ─── TABLE ─── */
+        .table-container {
+            padding: 0 32px 32px;
+        }
+
+        .table-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .table-header h2 {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        th {
+            text-align: left;
+            padding: 14px 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.35);
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        td {
+            padding: 14px 20px;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        td:first-child {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 12px;
+            width: 60px;
+        }
+
+        .name-cell {
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .time-cell {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        .action-cell {
+            width: 80px;
+            text-align: right;
+        }
+
+        /* ─── EMPTY STATE ─── */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .empty-state .icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        /* ─── TOAST ─── */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 16px 24px;
+            background: rgba(76, 175, 80, 0.15);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            border-radius: 14px;
+            color: #4caf50;
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 999;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* ─── LIVE BADGE ─── */
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            border-radius: 20px;
+            font-size: 11px;
+            color: #4caf50;
+            font-weight: 500;
+        }
+
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            background: #4caf50;
+            border-radius: 50%;
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <h1>Admin Panel <span>/ Event Registration</span></h1>
+        <div class="header-actions">
+            <span class="live-badge"><span class="live-dot"></span> Live</span>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-bar">
+        <div class="stat-card">
+            <div class="stat-label">Total Registered</div>
+            <div id="statTotal" class="stat-value orange">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Filler Pool</div>
+            <div id="statFiller" class="stat-value blue">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Transferred to Display</div>
+            <div id="statTransferred" class="stat-value green">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Grid Capacity</div>
+            <div class="stat-value blue">504</div>
+        </div>
+    </div>
+
+    <!-- Transfer button -->
+    <div class="transfer-section">
+        <button class="btn btn-transfer" onclick="transferNames()">
+            🪔 Transfer Names to Display
+        </button>
+        <span id="transferStatus" class="transfer-status">Not transferred yet</span>
+
+        <div style="margin-left: auto;">
+            <button class="btn btn-danger" onclick="resetAll()">Reset All</button>
+        </div>
+    </div>
+
+    <!-- Excel Upload: Registrations -->
+    <div class="upload-section">
+        <div class="upload-box">
+            <label>📁 Import Registrations</label>
+            <button class="btn btn-upload-pick" onclick="document.getElementById('excelFile').click()">Choose file</button>
+            <input type="file" id="excelFile" accept=".xlsx,.xls,.csv" onchange="onFileSelect(this, 'uploadFilename', 'uploadBtn')">
+            <span id="uploadFilename" class="upload-filename">No file selected</span>
+            <button id="uploadBtn" class="btn btn-upload-go" onclick="uploadExcel()" disabled>Upload</button>
+        </div>
+    </div>
+
+    <!-- Excel Upload: Filler Names Pool -->
+    <div class="upload-section">
+        <div class="upload-box" style="border-color: rgba(66, 165, 245, 0.2);">
+            <label>🎲 Filler Names Pool</label>
+            <button class="btn btn-upload-pick" onclick="document.getElementById('fillerFile').click()">Choose file</button>
+            <input type="file" id="fillerFile" accept=".xlsx,.xls,.csv" onchange="onFileSelect(this, 'fillerFilename', 'fillerBtn')">
+            <span id="fillerFilename" class="upload-filename">No file selected</span>
+            <button id="fillerBtn" class="btn btn-upload-go" onclick="uploadFiller()" disabled>Upload</button>
+            <span style="font-size: 11px; color: rgba(255,255,255,0.3);">Randomly fills empty grid slots</span>
+        </div>
+    </div>
+
+    <!-- Names table -->
+    <div class="table-container">
+        <div class="table-header">
+            <h2>Registered Names</h2>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Registered At</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="namesBody">
+                <tr>
+                    <td colspan="4">
+                        <div class="empty-state">
+                            <div class="icon">📋</div>
+                            <div>No registrations yet</div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Toast notification -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        const API = window.location.origin;
+
+        // ─── LOAD NAMES ──────────────────────────
+        async function loadNames() {
+            try {
+                const res = await fetch(`${API}/api/admin/names`);
+                const data = await res.json();
+
+                document.getElementById('statTotal').innerText = data.count;
+                if (data.fillerCount !== undefined) {
+                    document.getElementById('statFiller').innerText = data.fillerCount;
+                }
+                renderTable(data.clients);
+            } catch (err) {
+                console.error('Failed to load names:', err);
+            }
+        }
+
+        // ─── RENDER TABLE ────────────────────────
+        function renderTable(clients) {
+            const body = document.getElementById('namesBody');
+
+            if (clients.length === 0) {
+                body.innerHTML = `
+                    <tr><td colspan="4">
+                        <div class="empty-state">
+                            <div class="icon">📋</div>
+                            <div>No registrations yet</div>
+                        </div>
+                    </td></tr>`;
+                return;
+            }
+
+            body.innerHTML = clients.map((c, i) => `
+                <tr>
+                    <td>${c.id}</td>
+                    <td class="name-cell">${escapeHtml(c.name)}</td>
+                    <td class="time-cell">${c.created_at || '—'}</td>
+                    <td class="action-cell">
+                        <button class="btn btn-small btn-delete" onclick="deleteName(${c.id})">Remove</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ─── TRANSFER TO DISPLAY ─────────────────
+        async function transferNames() {
+            try {
+                const res = await fetch(`${API}/api/admin/transfer`, { method: 'POST' });
+                const data = await res.json();
+
+                document.getElementById('statTransferred').innerText = data.count;
+                document.getElementById('transferStatus').innerText = `✅ ${data.realCount} real + ${data.fillerUsed} filler = ${data.count} total`;
+                document.getElementById('transferStatus').className = 'transfer-status active';
+
+                showToast(`🪔 ${data.count} names transferred (${data.fillerUsed} filler used)`);
+            } catch (err) {
+                showToast('❌ Transfer failed');
+            }
+        }
+
+        // ─── DELETE NAME ─────────────────────────
+        async function deleteName(id) {
+            await fetch(`${API}/api/admin/names/${id}`, { method: 'DELETE' });
+            loadNames();
+            showToast('Name removed');
+        }
+
+        // ─── RESET ALL ───────────────────────────
+        async function resetAll() {
+            if (!confirm('Are you sure? This will clear ALL registered names and the display.')) return;
+
+            await fetch(`${API}/api/admin/reset`, { method: 'POST' });
+            document.getElementById('statTransferred').innerText = '0';
+            document.getElementById('transferStatus').innerText = 'Not transferred yet';
+            document.getElementById('transferStatus').className = 'transfer-status';
+            loadNames();
+            showToast('All data cleared');
+        }
+
+        // ─── TOAST ───────────────────────────────
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ─── FILE SELECT (generic for both uploads) ─
+        function onFileSelect(input, filenameId, btnId) {
+            const file = input.files[0];
+            if (file) {
+                document.getElementById(filenameId).innerText = file.name;
+                document.getElementById(btnId).disabled = false;
+            } else {
+                document.getElementById(filenameId).innerText = 'No file selected';
+                document.getElementById(btnId).disabled = true;
+            }
+        }
+
+        async function uploadExcel() {
+            const fileInput = document.getElementById('excelFile');
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const btn = document.getElementById('uploadBtn');
+            btn.disabled = true;
+            btn.innerText = 'Uploading...';
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const res = await fetch(`${API}/api/admin/upload-excel`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (data.error) {
+                    showToast(`❌ ${data.error}`);
+                } else {
+                    showToast(`📁 ${data.imported} names imported`);
+                    loadNames();
+                }
+            } catch (err) {
+                showToast('❌ Upload failed');
+            }
+
+            btn.innerText = 'Upload';
+            btn.disabled = false;
+            fileInput.value = '';
+            document.getElementById('uploadFilename').innerText = 'No file selected';
+        }
+
+        // ─── FILLER UPLOAD ───────────────────────
+        async function uploadFiller() {
+            const fileInput = document.getElementById('fillerFile');
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const btn = document.getElementById('fillerBtn');
+            btn.disabled = true;
+            btn.innerText = 'Uploading...';
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const res = await fetch(`${API}/api/admin/upload-filler`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (data.error) {
+                    showToast(`❌ ${data.error}`);
+                } else {
+                    showToast(`🎲 ${data.count} filler names loaded`);
+                    document.getElementById('statFiller').innerText = data.count;
+                }
+            } catch (err) {
+                showToast('❌ Upload failed');
+            }
+
+            btn.innerText = 'Upload';
+            btn.disabled = false;
+            fileInput.value = '';
+            document.getElementById('fillerFilename').innerText = 'No file selected';
+        }
+
+        // ─── ESCAPE HTML ─────────────────────────
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.innerText = str;
+            return div.innerHTML;
+        }
+
+        // ─── AUTO-REFRESH every 5 seconds ────────
+        loadNames();
+        setInterval(loadNames, 5000);
+    </script>
+</body>
+</html>
