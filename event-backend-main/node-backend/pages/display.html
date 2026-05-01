@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Diya Display</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/diya.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -104,8 +105,7 @@
             align-items: center;
             justify-content: center;
             z-index: 50;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
+            background: #000;
             transition: opacity 0.8s ease;
         }
 
@@ -114,22 +114,87 @@
             pointer-events: none;
         }
 
-        .waiting-text {
-            color: rgba(255, 255, 255, 0.6);
+        .waiting-layout {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 180px;
+            width: 95%;
+        }
+
+        .qr-group {
+            display: flex;
+            flex-direction: row;
+            gap: 120px;
+            align-items: center;
+        }
+
+        .qr-item {
+            text-align: center;
+        }
+
+        .qr-item img {
+            width: 160px;
+            height: 160px;
+            border: 2px solid rgba(212, 175, 55, 0.25);
+            border-radius: 12px;
+            padding: 8px;
+            background: #fff;
+        }
+
+        .qr-label {
+            color: rgba(212, 175, 55, 0.7);
             font-family: 'Outfit', sans-serif;
-            font-size: 20px;
+            font-size: 13px;
+            font-weight: 400;
+            margin-top: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .center-branding {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .center-branding .waiting-logo {
+            width: 280px;
+            filter: drop-shadow(0 0 40px rgba(212, 175, 55, 0.15));
+            margin-bottom: 24px;
+        }
+
+        .brand-divider {
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4), transparent);
+            margin: 16px 0;
+        }
+
+        .waiting-tagline {
+            color: rgba(255, 255, 255, 0.25);
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
             font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
-        .waiting-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-            animation: glow 2s ease-in-out infinite;
+        .scan-prompt {
+            color: rgba(212, 175, 55, 0.5);
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 50px;
+            animation: subtlePulse 3s ease-in-out infinite;
         }
 
-        @keyframes glow {
-            0%, 100% { filter: drop-shadow(0 0 10px rgba(255, 140, 50, 0.3)); }
-            50% { filter: drop-shadow(0 0 25px rgba(255, 140, 50, 0.6)); }
+        @keyframes subtlePulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
         }
 
         /* Name reveal animation */
@@ -173,8 +238,39 @@
 
         <!-- Waiting overlay (shown until admin transfers) -->
         <div id="waiting-overlay">
-            <div class="waiting-icon">🪔</div>
-            <div class="waiting-text">Waiting for names...</div>
+            <div class="waiting-layout">
+                <!-- Left QR pair -->
+                <div class="qr-group">
+                    <div class="qr-item">
+                        <img src="/assets/register-qr.png" alt="Scan to Register">
+                        <div class="qr-label">Scan to Register</div>
+                    </div>
+                    <div class="qr-item">
+                        <img src="/assets/register-qr.png" alt="Scan to Register">
+                        <div class="qr-label">Scan to Register</div>
+                    </div>
+                </div>
+
+                <!-- Center logo -->
+                <div class="center-branding">
+                    <img class="waiting-logo" src="/assets/final-logo.png" alt="Dulux">
+                    <div class="brand-divider"></div>
+                    <div class="waiting-tagline">Luxury Club Meet 2026</div>
+                </div>
+
+                <!-- Right QR pair -->
+                <div class="qr-group">
+                    <div class="qr-item">
+                        <img src="/assets/register-qr.png" alt="Scan to Register">
+                        <div class="qr-label">Scan to Register</div>
+                    </div>
+                    <div class="qr-item">
+                        <img src="/assets/register-qr.png" alt="Scan to Register">
+                        <div class="qr-label">Scan to Register</div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 

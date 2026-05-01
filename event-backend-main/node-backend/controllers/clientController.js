@@ -19,10 +19,6 @@ const ClientController = {
       return res.status(400).json({ error: "Name required" });
     }
 
-    if (name.split(" ").length < 2) {
-      return res.status(400).json({ error: "Please enter your full name" });
-    }
-
     if (name.length < 2 || name.length > 50) {
       return res.status(400).json({ error: "Name must be 2-50 characters" });
     }

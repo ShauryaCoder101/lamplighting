@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register — Dulux Event</title>
+    <title>Register — Dulux Luxury Club Meet 2026</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/diya.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -15,97 +16,112 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #0d0d18 0%, #1a0a2e 30%, #2d1b4e 60%, #1a0a2e 100%);
+            background: #000;
             overflow: hidden;
         }
 
-        /* Animated background glow */
+        /* Subtle golden ambient glow */
         body::before {
             content: '';
             position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 30% 50%, rgba(255, 140, 50, 0.08) 0%, transparent 50%),
-                        radial-gradient(circle at 70% 60%, rgba(255, 80, 30, 0.06) 0%, transparent 50%);
-            animation: bgPulse 8s ease-in-out infinite;
+            top: 50%;
+            left: 50%;
+            width: 600px;
+            height: 600px;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.06) 0%, transparent 70%);
             z-index: 0;
+            pointer-events: none;
         }
 
-        @keyframes bgPulse {
-            0%, 100% { transform: scale(1) rotate(0deg); }
-            50% { transform: scale(1.1) rotate(3deg); }
+        /* Golden shimmer line at top */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4), transparent);
+            z-index: 10;
         }
 
         .card {
             position: relative;
             z-index: 1;
             text-align: center;
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(212, 175, 55, 0.03);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(212, 175, 55, 0.12);
             border-radius: 24px;
             padding: 48px 40px;
             width: 90%;
             max-width: 420px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4),
-                        0 0 80px rgba(255, 120, 40, 0.05);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6),
+                        0 0 100px rgba(212, 175, 55, 0.04);
         }
 
-        .diya-icon {
-            width: 80px;
-            margin-bottom: 24px;
-            filter: drop-shadow(0 4px 20px rgba(255, 140, 50, 0.5));
-            animation: float 3s ease-in-out infinite;
+        /* Dulux logo */
+        .brand-logo {
+            width: 160px;
+            margin-bottom: 32px;
+            filter: drop-shadow(0 2px 12px rgba(212, 175, 55, 0.3));
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+        /* Decorative line below logo */
+        .divider {
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.5), transparent);
+            margin: 0 auto 28px;
         }
 
         h1 {
-            color: #fff;
+            color: #d4af37;
             font-weight: 600;
-            font-size: 24px;
-            margin-bottom: 6px;
+            font-size: 22px;
+            letter-spacing: 1px;
+            margin-bottom: 28px;
         }
 
         .subtitle {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 14px;
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 13px;
             font-weight: 300;
-            margin-bottom: 32px;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            line-height: 1.6;
         }
 
         input {
             width: 100%;
             padding: 16px 20px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 12px;
             color: #fff;
             font-family: 'Outfit', sans-serif;
             font-size: 16px;
             font-weight: 400;
             outline: none;
             transition: all 0.3s ease;
+            letter-spacing: 0.3px;
         }
 
         input::placeholder {
-            color: rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.2);
+            font-weight: 300;
         }
 
         input:focus {
-            border-color: rgba(255, 140, 50, 0.5);
-            box-shadow: 0 0 20px rgba(255, 140, 50, 0.1);
-            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(212, 175, 55, 0.5);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.08);
+            background: rgba(255, 255, 255, 0.06);
         }
 
         #error {
-            color: #ff6b6b;
+            color: #e57373;
             font-size: 13px;
             margin-top: 10px;
             min-height: 20px;
@@ -116,22 +132,40 @@
             width: 100%;
             padding: 16px;
             margin-top: 16px;
-            background: linear-gradient(135deg, #ff8c32, #ff5722);
+            background: linear-gradient(135deg, #d4af37, #b8962e);
             border: none;
-            border-radius: 14px;
-            color: #fff;
+            border-radius: 12px;
+            color: #000;
             font-family: 'Outfit', sans-serif;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            letter-spacing: 1px;
+            text-transform: uppercase;
             position: relative;
             overflow: hidden;
         }
 
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(255, 87, 34, 0.4);
+            box-shadow: 0 8px 30px rgba(212, 175, 55, 0.3);
+            background: linear-gradient(135deg, #e0c04a, #c9a633);
         }
 
         button:active {
@@ -139,9 +173,13 @@
         }
 
         button:disabled {
-            opacity: 0.6;
+            opacity: 0.5;
             cursor: not-allowed;
             transform: none;
+        }
+
+        button:disabled::before {
+            display: none;
         }
 
         /* Thank you screen */
@@ -154,12 +192,13 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            background: linear-gradient(135deg, #d4af37, #b8962e);
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 24px;
             animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
         }
 
         @keyframes popIn {
@@ -170,77 +209,94 @@
         .checkmark svg {
             width: 40px;
             height: 40px;
-            stroke: #fff;
+            stroke: #000;
             stroke-width: 3;
             fill: none;
         }
 
         #thankText {
-            color: #fff;
+            color: #d4af37;
             font-size: 22px;
             font-weight: 600;
             margin-bottom: 8px;
+            letter-spacing: 0.5px;
         }
 
         .thank-sub {
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.35);
             font-size: 14px;
             font-weight: 300;
         }
 
-        /* Floating particles */
+        /* Floating golden particles */
         .particle {
             position: fixed;
-            width: 3px;
-            height: 3px;
-            background: rgba(255, 140, 50, 0.3);
+            width: 2px;
+            height: 2px;
+            background: rgba(212, 175, 55, 0.25);
             border-radius: 50%;
-            animation: rise linear infinite;
+            animation: drift linear infinite;
             z-index: 0;
         }
 
-        @keyframes rise {
+        @keyframes drift {
             0% { transform: translateY(100vh) scale(0); opacity: 0; }
-            20% { opacity: 1; }
+            15% { opacity: 1; }
             100% { transform: translateY(-20vh) scale(1); opacity: 0; }
+        }
+
+        /* Footer branding */
+        .footer-line {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+            z-index: 10;
         }
     </style>
 </head>
 <body>
 
-    <!-- Floating particles -->
+    <!-- Subtle floating particles -->
     <script>
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 15; i++) {
             const p = document.createElement('div');
             p.className = 'particle';
             p.style.left = Math.random() * 100 + '%';
-            p.style.animationDuration = (Math.random() * 6 + 4) + 's';
-            p.style.animationDelay = (Math.random() * 4) + 's';
-            p.style.width = p.style.height = (Math.random() * 3 + 1) + 'px';
+            p.style.animationDuration = (Math.random() * 8 + 6) + 's';
+            p.style.animationDelay = (Math.random() * 5) + 's';
+            p.style.width = p.style.height = (Math.random() * 2 + 1) + 'px';
             document.body.appendChild(p);
         }
     </script>
 
     <!-- Registration form -->
     <div id="formScreen" class="card">
-        <img class="diya-icon" src="https://cdn-icons-png.flaticon.com/512/869/869869.png" alt="Diya">
+        <img class="brand-logo" src="/assets/final-logo.png" alt="Dulux">
+        <div class="divider"></div>
 
-        <h1>Welcome</h1>
-        <p class="subtitle">Enter your full name to light a Diya</p>
+        <p class="subtitle">Enter your full name to join us in the<br>lamp lighting ceremony for</p>
+        <h1>Dulux Luxury Club Meet 2026</h1>
 
-        <input id="name" placeholder="Your full name" autocomplete="off" autofocus maxlength="50">
+        <input id="name" placeholder="Your name" autocomplete="off" autofocus maxlength="50">
         <div id="error"></div>
         <button id="submitBtn" onclick="register()">Submit</button>
     </div>
 
     <!-- Thank you -->
     <div id="thankYou" class="card">
+        <img class="brand-logo" src="/assets/final-logo.png" alt="Dulux">
+        <div class="divider"></div>
         <div class="checkmark">
             <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </div>
         <div id="thankText">Thank you! 🪔</div>
-        <p class="thank-sub">Your name will appear under a Diya</p>
+        <p class="thank-sub">Your Diya will glow on the display wall</p>
     </div>
+
+    <div class="footer-line"></div>
 
     <script>
         const API = window.location.origin;
@@ -261,10 +317,6 @@
             // Client-side validation
             if (!name) {
                 errorDiv.innerText = 'Please enter your name';
-                return;
-            }
-            if (name.split(' ').length < 2) {
-                errorDiv.innerText = 'Please enter your full name';
                 return;
             }
 
